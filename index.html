@@ -1,0 +1,106 @@
+
+<html>
+<head>
+<title>Terminal Tracker</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script
+	src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+<script
+	src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<style>
+table, th, td {
+	border: 1px solid black;
+	border-collapse: collapse;
+}
+
+th, td {
+	padding: 5px;
+	text-align: left;
+}
+
+td{
+	text-align: center;
+	background-color:white;
+}
+
+.red
+{
+  background-color: red;
+}
+.yellow
+{
+background-color:yellow
+}
+.green{
+background-color:green
+}
+</style>
+</head>
+<body ng-app="myApp">
+	<div ng-controller="flightController">
+		<div class="container">
+			<h2>Terminal Tracking System</h2>
+			<p>Real Time Utilization of Airport Terminals</p>
+			<table class="table">
+				<thead>
+					<tr>
+
+						<th>Terminals/TimeZone</th>
+						<th colspan="2">0-3 hours</th>
+						<th colspan="2">3-6 hours</th>
+						<th colspan="2">6-9 hours</th>
+					</tr>
+					<tr>
+						<th></th>
+						<th>Scheduled Flights</th>
+						<th>Planned Flights</th>
+						<th>Scheduled Flights</th>
+						<th>Planned Flights</th>
+						<th>Scheduled Flights</th>
+						<th>Planned Flights</th>
+
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="x in terminals">
+						<td>{{ x.name }}</td>
+						<td ng-class='x.data.timeSlot0.color'>{{ x.data.timeSlot0.scheduleCount }}</td>
+						<td>{{ x.data.timeSlot0.plannedCount }}</td>
+						<td ng-class='x.data.timeSlot1.color'>{{ x.data.timeSlot1.scheduleCount }}</td>
+						<td>{{ x.data.timeSlot1.plannedCount }}</td>
+						<td ng-class='x.data.timeSlot2.color'>{{ x.data.timeSlot2.scheduleCount }}</td>
+						<td>{{ x.data.timeSlot2.plannedCount }}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+
+
+	</div>
+
+	<script>
+var app = angular.module('myApp', []);
+app.controller('flightController', function($scope, $http,$interval) {
+   
+
+		$interval(function(){
+		$http.get("/departures")
+	    .success(function (response) {
+	    	console.log("response"+JSON.stringify(response));
+	    	$scope.terminals = response;
+	    	
+	    	
+	    });	
+		
+	},3000);
+	
+    
+});
+</script>
+</body>
+</html>
